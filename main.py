@@ -7,8 +7,8 @@ app = FastAPI()
 
 
 hotels = [
-    {"id": 1, "title": "Sochi"},
-    {"id": 2, "title": "Dubai"},
+    {"id": 1, "title": "Sochi", "name": "sochi"},
+    {"id": 2, "title": "Dubai", "name": "dubai"},
 ]
 
 
@@ -20,7 +20,6 @@ def get_hotels(
     if all([not id, not title]):
         return hotels
     return [hotel for hotel in hotels if hotel["title"] == title or hotel["id"] == id]
-
 
 @app.post("/hotels", tags=["Добавление Отеля"])
 def create_hotel(
@@ -38,6 +37,32 @@ def delete_hotel(hotel_id: int):
     global hotels
     hotels = [hotel for hotel in hotels if hotel["id"] != hotel_id]
     return {"status": "OK"}
+
+@app.put("/hotels/{hotel_id}", tags=["Изменение всех параметров Отеля"])
+def put_hotel(hotel_id: int, title: str, name: str):
+    global hotels
+    for hotel in hotels:
+        if hotel["id"] == hotel_id:
+            hotel.update({"title": title, "name": name})
+    return {"status": "OK"}
+
+@app.patch("/hotels/{hotel_id}", tags=["Изменение какого-либо параметра Отеля"])
+def patch_hotel(
+        hotel_id: int,
+        title: str | None = Query(None, description="Название Отеля"),
+        name: str | None = Query(None, description="Параметр Отеля"),
+):
+    global hotels
+    if all([not title, not name]):
+        return {"status": "Необходимо заполнить хотя бы один параметр для изменения"}
+    for hotel in hotels:
+        if hotel["id"] == hotel_id:
+            if title:
+                hotel["title"] = title
+            if name:
+                hotel["name"] = name
+            return hotels
+
 
 
 if __name__ == "__main__":

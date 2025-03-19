@@ -43,3 +43,33 @@ if __name__ == "__main__":
 ```commandline
 python3 main.py
 ```
+
+## Ручка получение отелей
+```commandline
+@app.get("/hotels", tags=["Список Отелей"])
+def get_hotels(
+        id: int | None= Query(None, description="Идентификатор Отеля"),
+        title: str | None = Query(None, description="Название Отеля"),
+):
+    if all([not id, not title]):
+        return hotels
+    return [hotel for hotel in hotels if hotel["title"] == title or hotel["id"] == id]
+
+```
+#### Если параметры в документации не указаны: выводится список всех отелей, если же указаны либо id либо наименование,то по этому параметру фильтруется список
+
+## Ручка добавление отеля (post): 
+```commandline
+@app.post("/hotels", tags=["Добавление Отеля"])
+def create_hotel(
+        title: str = Body(embed=True)
+):
+    global hotels
+    hotels.append({
+        "id": hotels[-1]["id"] + 1,
+        "title": title
+    })
+    return {"status": "OK"}
+```
+embed=True выводит в броузере в json
+
