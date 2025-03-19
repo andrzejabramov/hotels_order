@@ -39,29 +39,43 @@ def delete_hotel(hotel_id: int):
     return {"status": "OK"}
 
 @app.put("/hotels/{hotel_id}", tags=["Изменение всех параметров Отеля"])
-def put_hotel(hotel_id: int, title: str, name: str):
+def put_hotel(
+        hotel_id: int,
+        title: str = Body(),
+        name: str = Body()
+):
     global hotels
     for hotel in hotels:
         if hotel["id"] == hotel_id:
             hotel.update({"title": title, "name": name})
     return {"status": "OK"}
 
-@app.patch("/hotels/{hotel_id}", tags=["Изменение какого-либо параметра Отеля"])
+@app.patch(
+    "/hotels/{hotel_id}",
+    tags=["Изменение какого-либо параметра Отеля"],
+    summary="Частичное обновление параметров",
+    description="обновляются выборочно параметры"
+)
 def patch_hotel(
         hotel_id: int,
-        title: str | None = Query(None, description="Название Отеля"),
-        name: str | None = Query(None, description="Параметр Отеля"),
+        title: str | None = Body(None),
+        name: str | None = Body(None)
 ):
     global hotels
     if all([not title, not name]):
         return {"status": "Необходимо заполнить хотя бы один параметр для изменения"}
-    for hotel in hotels:
-        if hotel["id"] == hotel_id:
-            if title:
-                hotel["title"] = title
-            if name:
-                hotel["name"] = name
-            return hotels
+    hotel = [hotel for hotel in hotels if hotel["id"] == hotel_id][0]
+    if title:
+        hotel["title"] = title
+    if name:
+        hotel["name"] = name
+    # for hotel in hotels:
+    #     if hotel["id"] == hotel_id:
+    #         if title:
+    #             hotel["title"] = title
+    #         if name:
+    #             hotel["name"] = name
+    return {"status": "Ok"}
 
 
 
