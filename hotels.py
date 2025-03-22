@@ -1,5 +1,7 @@
 from fastapi import Query, Body, APIRouter
 from schemas.hotels import Hotel, HotelPATCH
+# from fastapi_pagination import add_pagination, Page
+# from fastapi_pagination.async_paginator import paginate
 
 
 router = APIRouter(prefix="/hotels", tags=["Отели"])
@@ -7,7 +9,12 @@ router = APIRouter(prefix="/hotels", tags=["Отели"])
 
 hotels = [
     {"id": 1, "title": "Sochi", "name": "sochi"},
-    {"id": 2, "title": "Dubai", "name": "dubai"},
+    {"id": 2, "title": "Дубай", "name": "dubai"},
+    {"id": 3, "title": "Мальдивы", "name": "maldivi"},
+    {"id": 4, "title": "Геленджик", "name": "gelendzhik"},
+    {"id": 5, "title": "Москва", "name": "moscow"},
+    {"id": 6, "title": "Казань", "name": "kazan"},
+    {"id": 7, "title": "Санкт-Петербург", "name": "spb"},
 ]
 
 
@@ -19,8 +26,15 @@ hotels = [
 def get_hotels(
     id: int | None= Query(None, description="Идентификатор Отеля"),
     title: str | None = Query(None, description="Название Отеля"),
+    page: int | None = Query(1, description="Выберите страницу данных"),
+    per_page: int | None = Query(3, description="Выберите количество отображаемых на странице строк")
 ):
     if all([not id, not title]):
+        if page and per_page:
+            start = (page - 1) * per_page
+            end = start + per_page
+            hotels_ = hotels[start:end]
+            return hotels_
         return hotels
     return [hotel for hotel in hotels if hotel["title"] == title or hotel["id"] == id]
 
