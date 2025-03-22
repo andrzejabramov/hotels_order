@@ -26,8 +26,8 @@ hotels = [
 def get_hotels(
     id: int | None= Query(None, description="Идентификатор Отеля"),
     title: str | None = Query(None, description="Название Отеля"),
-    page: int | None = Query(1, description="Выберите страницу данных"),
-    per_page: int | None = Query(3, description="Выберите количество отображаемых на странице строк")
+    page: int | None = Query(1, description="Выберите страницу данных", ge=1, lt=30),
+    per_page: int | None = Query(3, description="Выберите количество отображаемых на странице строк", ge=1, lt=30)
 ):
     if all([not id, not title]):
         if page and per_page:
