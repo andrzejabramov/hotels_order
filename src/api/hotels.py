@@ -1,5 +1,6 @@
 from fastapi import Query, Body, APIRouter
-from schemas.hotels import Hotel, HotelPATCH
+from src.api.dependencies import PaginationDep
+from src.schemas.hotels import Hotel, HotelPATCH
 # from fastapi_pagination import add_pagination, Page
 # from fastapi_pagination.async_paginator import paginate
 
@@ -24,15 +25,14 @@ hotels = [
     description="Либо получаем все отели, если не устанавливаем параметры, либо отдельно взятые",
 )
 def get_hotels(
+    pagination: PaginationDep,
     id: int | None= Query(None, description="Идентификатор Отеля"),
     title: str | None = Query(None, description="Название Отеля"),
-    page: int | None = Query(1, description="Выберите страницу данных", ge=1, lt=30),
-    per_page: int | None = Query(3, description="Выберите количество отображаемых на странице строк", ge=1, lt=30)
 ):
     if all([not id, not title]):
-        if page and per_page:
-            start = (page - 1) * per_page
-            end = start + per_page
+        if pagination.page and pagination.per_page:
+            start = (pagination.page - 1) * pagination.per_page
+            end = start + pagination.per_page
             hotels_ = hotels[start:end]
             return hotels_
         return hotels
