@@ -8,6 +8,7 @@ from src.schemas.hotels import Hotel, HotelPATCH
 
 router = APIRouter(prefix="/hotels", tags=["Отели"])
 
+
 @router.get(
     "/",
     summary="Получение списка отелей с применением фильтра",
