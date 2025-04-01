@@ -19,5 +19,13 @@ class BaseRepository:
 
         return result.scalars().one_or_none()
 
-    async def add(self):
-        pass
+    async def add(self, data: BaseModel):
+        add_data_stat = (
+            insert(self.model)
+            .values(**data.model_dump())
+            .returning(
+                self.model.title
+            )
+        )
+        result = await self.session.execute(add_data_stat)
+        return result.scalars().one()

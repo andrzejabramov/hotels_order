@@ -1,4 +1,5 @@
-from sqlalchemy import select, func
+from pydantic import BaseModel
+from sqlalchemy import select, insert, func
 from repositories.base import BaseRepository
 from src.models.hotels import HotelsOrm
 
@@ -26,11 +27,3 @@ class HotelsRepository(BaseRepository):
         print(query.compile(compile_kwargs={"literal_binds": True}))
         result = await self.session.execute(query)
         return result.scalars().all()
-
-    async def add(
-            self,
-            location,
-            totle,
-    ):
-
-        pass
