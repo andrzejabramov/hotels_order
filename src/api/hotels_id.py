@@ -36,7 +36,7 @@ async def get_hotels(
     async with async_session_maker() as session:
         query = select(HotelsOrm)
         if id:
-            query= query.filter_by(id=id)
+            query = query.filter_by(id=id)
         if title:
             query = query.filter_by(title=title)
         query = (
