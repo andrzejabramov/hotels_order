@@ -1,3 +1,4 @@
+from docutils.nodes import title
 from fastapi import Query, Body, APIRouter
 from sqlalchemy import insert
 from repositories.hotels import HotelsRepository
@@ -41,24 +42,25 @@ async def create_hotel(hotel_data: Hotel = Body(openapi_examples={
     "1":{
         "summary": "Сочи",
         "value": {
-            "title": "Отель Сочи 5 звезд у моря",
-            "location": "ул. Моря, 1"
+            "title": "Ренессанс",
+            "location": "Сочи, ул. Бирюзовая, 1"
         }
     },
     "2":{
         "summary": "Дубай",
         "value": {
-            "title": "Отель Дубай у фонтана",
-            "location": "ул. Шейха, 2"
+            "title": "Шейхана",
+            "location": "Дубай, ул. Шейха, 2"
         }
     }})
 ):
     async with async_session_maker() as session:
-        add_hotel_stmt = insert(HotelsOrm).values(**hotel_data.model_dump())
+        #add_hotel_stmt = insert(HotelsOrm).values(**hotel_data.model_dump())
         #print(add_hotel_stmt.compile(engine, compile_kwargs={"literal_binds": True}))
-        await session.execute(add_hotel_stmt)
+        #await session.execute(add_hotel_stmt)
+        hotel = await HotelsRepository(session).add(hotel_data)
         await session.commit()
-    return {"status": "OK"}
+        return {"status": "OK", "data": hotel}
 
 @router.delete(
     "/{hotel_id}",

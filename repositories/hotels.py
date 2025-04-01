@@ -26,3 +26,11 @@ class HotelsRepository(BaseRepository):
         print(query.compile(compile_kwargs={"literal_binds": True}))
         result = await self.session.execute(query)
         return result.scalars().all()
+
+    async def add(
+            self,
+            location,
+            totle,
+    ):
+
+        pass
