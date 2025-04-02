@@ -73,3 +73,12 @@ def create_hotel(
 ```
 embed=True выводит в броузере в json
 
+# Настройка БД для работы в кодировке UTF-8
+
+```commandline
+SET client_encoding = 'UTF8';
+UPDATE pg_database SET datcollate='ru_RU.UTF-8', datctype='ru_RU' WHERE datname='booking';
+UPDATE pg_database set encoding = pg_char_to_encoding('UTF8') where datname = 'booking';
+```
+
+Каждую строку кода выполнять отдельно (если в клиенте: бобер, навикат) в новом окне SQL запроса 
