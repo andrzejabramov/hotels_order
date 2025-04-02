@@ -29,3 +29,9 @@ class BaseRepository:
         )
         result = await self.session.execute(add_data_stat)
         return result.scalars().one()
+
+        async def edit(self, data: BaseModel, **filter_by) -> None:
+            pass
+
+        async def delete(self, **filter_by) -> None:
+            pass
