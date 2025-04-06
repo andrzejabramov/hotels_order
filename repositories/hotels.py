@@ -2,10 +2,12 @@ from pydantic import BaseModel
 from sqlalchemy import select, insert, func
 from repositories.base import BaseRepository
 from src.models.hotels import HotelsOrm
+from src.schemas.hotels import Hotel
 
 
 class HotelsRepository(BaseRepository):
     model = HotelsOrm
+    schema = Hotel
 
     async def get_all(
             self,
@@ -13,7 +15,7 @@ class HotelsRepository(BaseRepository):
             title,
             limit,
             offset,
-    ):
+    ) -> list[Hotel]:
         query = select(HotelsOrm)
         if location:
             query = query.filter(func.lower(HotelsOrm.location).contains(location.strip().lower()))

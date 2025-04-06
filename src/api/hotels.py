@@ -4,7 +4,7 @@ from repositories.base import BaseRepository
 from repositories.hotels import HotelsRepository
 from src.api.dependencies import PaginationDep
 from src.database import async_session_maker
-from src.schemas.hotels import Hotel, HotelPATCH
+from src.schemas.hotels import HotelAdd, HotelPATCH
 from loguru import logger
 
 #logger.add("/src/logs/logs.log",format="{time} {level} {message}",level="INFO",rotation="1 month",compression="zip")
@@ -41,16 +41,12 @@ async def get_hotel(hotel_id: int):
     async with async_session_maker() as session:
         return await HotelsRepository(session).get_one_or_none(id=hotel_id)
 
-
-
-
-
 @router.post(
     "/",
     summary="Добавление Отеля",
     description="Добавляем Отель",
 )
-async def create_hotel(hotel_data: Hotel = Body(openapi_examples={
+async def create_hotel(hotel_data: HotelAdd = Body(openapi_examples={
     "1":{
         "summary": "Сочи",
         "value": {
@@ -87,7 +83,7 @@ async def delete_hotel(hotel_id: int):
     summary="Обновление всех параметров выбранного Отеля",
     description="Изменяем параметры только все пакетно"
 )
-async def edit_hotel(hotel_id: int, hotel_data: Hotel):
+async def edit_hotel(hotel_id: int, hotel_data: HotelAdd):
     async with async_session_maker() as session:
         await HotelsRepository(session).edit(hotel_data, id=hotel_id)
         await session.commit()
