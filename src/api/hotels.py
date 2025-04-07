@@ -1,11 +1,9 @@
 from fastapi import Query, Body, APIRouter
 
-from repositories.base import BaseRepository
-from repositories.hotels import HotelsRepository
+from src.repositories.hotels import HotelsRepository
 from src.api.dependencies import PaginationDep
 from src.database import async_session_maker
 from src.schemas.hotels import HotelAdd, HotelPATCH
-from loguru import logger
 
 #logger.add("/src/logs/logs.log",format="{time} {level} {message}",level="INFO",rotation="1 month",compression="zip")
 

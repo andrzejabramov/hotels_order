@@ -27,7 +27,7 @@ class BaseRepository:
             insert(self.model)
             .values(**data.model_dump())
             .returning(
-                self.model.title
+                self.model
             )
         )
         result = await self.session.execute(add_data_stat)

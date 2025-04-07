@@ -1,6 +1,5 @@
-from pydantic import BaseModel
-from sqlalchemy import select, insert, func
-from repositories.base import BaseRepository
+from sqlalchemy import select, func
+from src.repositories.base import BaseRepository
 from src.models.hotels import HotelsOrm
 from src.schemas.hotels import Hotel
 
