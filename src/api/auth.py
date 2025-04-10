@@ -37,23 +37,28 @@ async def login_user(
         response.set_cookie("access_token", access_token)
         return {"access_token": access_token}
 
+# @router.get("/auth_only")
+# async def auth_only(
+#         request: Request,
+#         authorization: str = Header(None)
+# ):
+#     # Попробуем получить токен из заголовка Authorization
+#     if authorization:
+#         # Обычно токен передается в формате "Bearer <token>"
+#         token = authorization.split(' ')[1] if 'Bearer ' in authorization else authorization
+#         return JSONResponse(content={"access_token": token})
+#
+#     # Если токен не найден в заголовках, проверим тело запроса
+#     body = await request.json()
+#     if 'access_token' in body:
+#         return JSONResponse(content={"access_token": body['access_token']})
+#
+#     # Если токен не найден ни в заголовках, ни в теле запроса
+#     raise HTTPException(status_code=400, detail="Access token not found in the request.")
 @router.get("/auth_only")
 async def auth_only(
-        request: Request,
-        authorization: str = Header(None)
+        request: Request
 ):
-    # Попробуем получить токен из заголовка Authorization
-    if authorization:
-        # Обычно токен передается в формате "Bearer <token>"
-        token = authorization.split(' ')[1] if 'Bearer ' in authorization else authorization
-        return JSONResponse(content={"access_token": token})
-
-    # Если токен не найден в заголовках, проверим тело запроса
-    body = await request.json()
-    if 'access_token' in body:
-        return JSONResponse(content={"access_token": body['access_token']})
-
-    # Если токен не найден ни в заголовках, ни в теле запроса
-    raise HTTPException(status_code=400, detail="Access token not found in the request.")
-
+    access_token = request.cookies.get("access_token", None)
+    return access_token
 
