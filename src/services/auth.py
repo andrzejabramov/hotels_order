@@ -1,5 +1,7 @@
 import jwt
 from datetime import datetime, timezone, timedelta
+
+from dns.dnssectypes import Algorithm
 from passlib.context import CryptContext
 
 from src.config import settings
@@ -20,3 +22,6 @@ class AuthService:
 
     def verify_password(self, plain_password, hashed_password):
         return self.pwd_context.verify(plain_password, hashed_password)
+
+    def encode_token(self, token: str) -> dict:
+        return jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
