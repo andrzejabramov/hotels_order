@@ -1,10 +1,10 @@
-from fastapi import APIRouter, HTTPException, Response, Request, Header
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, HTTPException, Response
 
 from src.repositories.users import UsersRepository
 from src.schemas.users import UserRequestAdd, UserAdd
 from src.database import async_session_maker
 from src.services.auth import AuthService
+from src.api.dependencies import UserIdDep
 
 router = APIRouter(prefix="/auth", tags=["Авторизация и аутентификация"])
 
@@ -55,13 +55,10 @@ async def login_user(
 #
 #     # Если токен не найден ни в заголовках, ни в теле запроса
 #     raise HTTPException(status_code=400, detail="Access token not found in the request.")
-@router.get("/auth_only")
-async def auth_only(
-        request: Request
+@router.get("/me")
+async def get_me(
+        user_id: UserIdDep,
 ):
-    access_token = request.cookies.get("access_token", None)
-    data = AuthService().encode_token(access_token)
-    user_id = data["user_id"]
     async with async_session_maker() as session:
         user = await UsersRepository(session).get_one_or_none(id=user_id)
         return user
