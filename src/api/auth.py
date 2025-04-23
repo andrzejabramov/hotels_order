@@ -39,12 +39,9 @@ async def login_user(
 
 
 @router.post("/logout")
-async def logout_user(
-        response: Response,
-):
-    async with async_session_maker() as session:
-        response.set_cookie("access_token", None)
-        return {"user": "logout"}
+async def logout_user(response: Response):
+    response.delete_cookie("access_token")
+    return {"user": "logout"}
 
 
 # @router.get("/auth_only")
