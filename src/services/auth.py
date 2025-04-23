@@ -1,7 +1,7 @@
 import jwt
 from datetime import datetime, timezone, timedelta
 
-from aiohttp.abc import HTTPException
+from fastapi import HTTPException
 from passlib.context import CryptContext
 
 from src.config import settings
