@@ -13,8 +13,8 @@ app = FastAPI()
 
 app.include_router(router_auth)
 app.include_router(router_hotels)
-app.include_router(router_speed)
 app.include_router(router_room)
+app.include_router(router_speed)
 
 
 if __name__ == "__main__":
