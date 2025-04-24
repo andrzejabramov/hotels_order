@@ -24,9 +24,11 @@ async def get_rooms(hotel_id: int):
     summary="Получение одного Номера по id",
     description="Получаем Номер по одному обязательному параметру id",
 )
-async def get_room(hotel_id, room_id: int):
+async def get_room(hotel_id: int, room_id: int):
     async with async_session_maker() as session:
-        return await RoomsRepository(session).get_one_or_none(id=room_id, hotel_id=hotel_id)
+        ans = await RoomsRepository(session).get_one_or_none(id=room_id, hotel_id=hotel_id)
+        res = "Такого номера не существует" if not ans else ans
+        return res
 
 @router.post(
     "/{hotel_id}/rooms",
@@ -47,6 +49,9 @@ async def create_room(hotel_id: str, room_data: RoomAddRequest = Body()):
 )
 async def delete_room(hotel_id: int, room_id: int):
     async with async_session_maker() as session:
+        ans = await RoomsRepository(session).get_one_or_none(id=room_id, hotel_id=hotel_id)
+        if not ans:
+            return "Такого номера не существует"
         await RoomsRepository(session).delete(id=room_id, hotel_id=hotel_id)
         await session.commit()
     return {"status": "OK"}
